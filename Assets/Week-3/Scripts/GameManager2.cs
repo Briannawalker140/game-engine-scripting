@@ -90,7 +90,7 @@ namespace Battleship
                 scoreLabel.text = string.Format("Score: {0}", score);
             }
 
-            void IncrementTime()
+            //*void IncrementTime()
             {
                 //Add 1 to the time
                 time++;
@@ -101,7 +101,7 @@ namespace Battleship
                 timeLabel.text = string.Format("{0}:{1}", time / 60, (time % 60).ToString("00"));
             }
 
-             public void Fire()
+             //*public void Fire()
             {
                 //Checks if the cell in the hits data is true or false
                 //If it's true that means we already fired a shot in the current cell
@@ -129,7 +129,7 @@ namespace Battleship
             }
 
 
-            void TryEndGame()
+            //*void TryEndGame()
             {
                 //Check every row
                 for (int row = 0; row < nRows; row++)
