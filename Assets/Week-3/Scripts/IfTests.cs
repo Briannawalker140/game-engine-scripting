@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IfTests : MonoBehaviour
+/*public class IfTests : MonoBehaviour
 {
     [SerializeField] int coins = 10011011;
     [SerializeField] string word = "bird";
@@ -41,4 +41,4 @@ public class IfTests : MonoBehaviour
             Debug.Log("Not Equal");
         }
     }
-}
+}*/

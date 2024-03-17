@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class PlayerControls : MonoBehaviour
 {
     [SerializeField] float speed;
     [SerializeField] float jumpForce;
-    [SerializeField] float rotation = 5.0f;
+    [SerializeField] float rotationVertical = 5.0f;
+    [SerializeField] float rotationHorizontal = 5.0f;
 
     PlayerControllerMappings playerMappings;
 
@@ -15,6 +17,7 @@ public class PlayerControls : MonoBehaviour
     private float mouseDeltaY = 0f;
     private float cameraRotX = 0f;
     private int rotDir = 0;
+    private bool grounded;
 
     InputAction move;
     InputAction fire;
@@ -62,6 +65,47 @@ public class PlayerControls : MonoBehaviour
         HandleVerticalRotation();
     }
 
+
+    /*private void FixedUpdate()
+    {
+        grounded = IsGrounded();
+
+        HandleMovement();
+    }
+
+    void HandleMovement()
+    {
+        if (grounded == false) return;
+
+        Vector2 axis = move.ReadValue<Vector2>();
+
+        Vector3 input = (axis.x * transform.right) + (transform.forward * axis.y);
+
+        input *= speed;
+
+        rb.velocity = new Vector3(input.x, rb.velocity.y, input.y);
+    }
+
+    bool IsGrounded()
+    {
+        //Bit shift the index of the layer (8) to get a bit mask
+        int layerMask = 1 << 3;
+
+        RaycastHit hit;
+
+        //Does the ray intersect any objects excluding the player layer
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.up * -1), out hit, 1.1f, layerMask))
+        {
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.up * -1) * hit.distance, Color.yellow); 
+            return true;
+        }
+        else
+        {
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward * -1) *1000, Color.white);
+            return false;
+        }
+    }*/
+
     void HandleHorizontalRotation()
     {
         mouseDeltaX = look.ReadValue<Vector2>().x;
@@ -70,7 +114,7 @@ public class PlayerControls : MonoBehaviour
         {
             rotDir = mouseDeltaX > 0 ? 1 : -1;
 
-            transform.eulerAngles += new Vector3(0, rotation * Time.deltaTime * rotDir, 0);
+            transform.eulerAngles += new Vector3(0, rotationHorizontal * Time.deltaTime * rotDir, 0);
         }
     }
 
@@ -82,7 +126,7 @@ public class PlayerControls : MonoBehaviour
         {
             rotDir = mouseDeltaY > 0 ? -1 : 1;
 
-            cameraRotX += rotation * Time.deltaTime * rotDir;
+            cameraRotX += rotationVertical * Time.deltaTime * rotDir;
             cameraRotX = Mathf.Clamp(cameraRotX, -45f, 45f);
 
             var targetRotation = Quaternion.Euler(Vector3.right * cameraRotX);
@@ -100,11 +144,9 @@ public class PlayerControls : MonoBehaviour
     void FixedUpdate()
     {
         Vector2 input = move.ReadValue<Vector2>();
-        float x = (input.x * speed * Time.deltaTime) + transform.position.x;
-        float y = transform.position.y;
-        float z = (input.y * speed * Time.deltaTime) + transform.position.z;
+        Vector3 direction = (input.x * transform.right) + (transform.forward * input.y);
 
-        transform.position = new Vector3(x,y,z);
+        transform.position = transform.position + (direction * speed * Time.deltaTime);
     }
 
     void Fire(InputAction.CallbackContext context)

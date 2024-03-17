@@ -1,4 +1,4 @@
-using DG.Tweening;
+//using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,7 +29,7 @@ namespace BeeGame
             return enemies[randomIndex];
         }
 
-        [ContextMenu("Attack")]
+        /*[ContextMenu("Attack")]
         void Attack()
         {
             Enemy target = FindNewTarget();
@@ -44,6 +44,6 @@ namespace BeeGame
                           transform.DOMove(target.transform.position, 1f);
                       });
                       
-        }
+        }*/
     }
 }
