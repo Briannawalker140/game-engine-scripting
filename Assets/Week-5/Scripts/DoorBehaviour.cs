@@ -24,7 +24,7 @@ public class DoorBehaviour : MonoBehaviour
         }
         else if (!_isDoorOpen)
         {
-
+            CloseDoor();
         }
     }
     void OpenDoor()

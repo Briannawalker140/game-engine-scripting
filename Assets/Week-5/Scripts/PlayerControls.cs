@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,10 +7,12 @@ using UnityEngine.UIElements;
 
 public class PlayerControls : MonoBehaviour
 {
+
     [SerializeField] float speed;
     [SerializeField] float jumpForce;
     [SerializeField] float rotationVertical = 5.0f;
     [SerializeField] float rotationHorizontal = 5.0f;
+    [SerializeField] Lava lava;
 
     PlayerControllerMappings playerMappings;
 
@@ -17,7 +20,7 @@ public class PlayerControls : MonoBehaviour
     private float mouseDeltaY = 0f;
     private float cameraRotX = 0f;
     private int rotDir = 0;
-    private bool grounded;
+    //private bool grounded;
 
     InputAction move;
     InputAction fire;
@@ -25,6 +28,7 @@ public class PlayerControls : MonoBehaviour
     InputAction look;
 
     Rigidbody rb;
+  //private bool hasKey;
 
     private void Awake()
     {
@@ -156,7 +160,29 @@ public class PlayerControls : MonoBehaviour
 
     void Jump(InputAction.CallbackContext context)
     {
-        
         rb.AddForce(transform.up * jumpForce, ForceMode.Impulse);
+    }
+
+    public int health = 20;
+
+    public void TakeDamage(int amt)
+    {
+        health -= amt;
+        if (health <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+
+      private void OnTriggerEnter(Collider other)
+      {
+          if (other.transform.tag == "Lava") TakeDamage();
+          
+      }
+
+    private void TakeDamage()
+    {
+        throw new NotImplementedException();
     }
 }

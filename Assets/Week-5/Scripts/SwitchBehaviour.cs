@@ -5,8 +5,11 @@ using UnityEngine;
 public class SwitchBehaviour : MonoBehaviour
 {
     [SerializeField] DoorBehaviour _doorBehaviour;
+
     [SerializeField] bool _isDoorOpenSwitch;
-    [SerializeField] bool _isDoorClosedSwitch;
+    [SerializeField] bool _isDoorCloseSwitch;
+
+    [SerializeField] InventoryManager.AllItems requiredItem;
 
     float _switchSizeY;
     Vector3 _switchUpPos;
@@ -15,10 +18,11 @@ public class SwitchBehaviour : MonoBehaviour
     float _switchDelay = 0.2f;
     bool _isPressingSwitch = false;
 
+
     // Start is called before the first frame update
     void Awake()
     {
-       _switchSizeY = transform.localScale.y;
+       _switchSizeY = transform.localScale.y / 2; 
 
         _switchUpPos = transform.position;
         _switchDownPos = new Vector3(transform.position.x, transform.position.y - _switchSizeY, transform.position.z);
@@ -52,33 +56,48 @@ public class SwitchBehaviour : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(UnityEngine.Collider collision)
+    private void OnTriggerEnter(Collider collision)
     {
         if (collision.CompareTag("Player"))
         {
             _isPressingSwitch = !_isPressingSwitch;
 
-            if (_isDoorOpenSwitch && _doorBehaviour._isDoorOpen)
+            if (HasRequiredItem(requiredItem))
             {
-                _doorBehaviour._isDoorOpen = !_doorBehaviour._isDoorOpen;
-            }
-            else if (_isDoorClosedSwitch && _doorBehaviour._isDoorOpen)
-            {
-                _doorBehaviour._isDoorOpen = !_doorBehaviour._isDoorOpen;
-            }
+                if (_isDoorOpenSwitch && _doorBehaviour._isDoorOpen)
+                {
+                    _doorBehaviour._isDoorOpen = !_doorBehaviour._isDoorOpen;
+                }
+                else if (_isDoorCloseSwitch && _doorBehaviour._isDoorOpen)
+                {
+                    _doorBehaviour._isDoorOpen = !_doorBehaviour._isDoorOpen;
+                }
+            } 
         }
     }
-    private void OnTriggerExit(UnityEngine.Collider collision)
+    private void OnTriggerExit(Collider collision)
     {
         if (collision.CompareTag("Player"))
         {
-            StartCoroutine((IEnumerator)SwitchUpDelay(_switchDelay));
+            StartCoroutine(SwitchUpDelay(_switchDelay));
         }
     }
 
-    IEnumerable SwitchUpDelay(float waitTime)
+    IEnumerator SwitchUpDelay(float waitTime)
     {
         yield return new WaitForSeconds(waitTime);
         _isPressingSwitch = false;
+    }
+
+    public bool HasRequiredItem(InventoryManager.AllItems itemRequired)
+    {
+        if (InventoryManager.Instance._inventoryItems.Contains(itemRequired))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
